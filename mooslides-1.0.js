@@ -1,9 +1,28 @@
+/**
+	Construct a new mooslides object. Make sure that your outterdiv already exists
+	and has been inserted in the DOM. (i.e. create a new mooslide in the window.domready
+	event.
+    @class Represents a mooslides object
+	@param {String} outterdiv Your main div
+	@param {Object} options A set of options (described below)
+	@param {options} customToolbar
+	@param {options}
+	@example
+	var myslides = new mooslides('mydiv', { options });
+ */ 
+
 var mooslides = new Class({
+	/** @lends mooslides.prototype */
+	
 	Implements: Options,
 	options: {
-		customToolbar: null
+		customToolbar: false
+		
 	},
-	
+	/**
+	@private
+	@constructor
+	*/
 	initialize: function(outterdiv, options) {
 		this.setOptions(options);
 		this.outterdiv = $(outterdiv);
@@ -13,9 +32,8 @@ var mooslides = new Class({
 		
 		
 		this.panels = this.outterdiv.getChildren().filter(".panels");
-		if(this.options.customToolbar == null) {
+		if(this.options.customToolbar == false) {
 			this.toolbar = this.buildToolbar();
-			console.log(this.toolbar);
 			this.toolbar.inject(this.outterdiv, 'before');
 		}
 		else {
@@ -36,7 +54,10 @@ var mooslides = new Class({
 		this.activePanelId = 0;
 		this.slideTo(0);
 	},
-	
+	/**
+	Builds the toolbar if the user wants to use the default toolbar. *INTERNAL USE*.
+	@private
+	*/
 	buildToolbar: function() {
 		var newToolbarDiv = new Element('div', {
 			'styles': {
@@ -109,6 +130,12 @@ var mooslides = new Class({
 		return newToolbarDiv;
 	},
 	
+	/**
+	Slides to the specified panel
+	@param {Int} panelId The id of the panel to scroll to. (zero-based)
+	@example
+	myslides.slideTo(0) // slides to the first panel
+	*/
 	slideTo: function(panelId) {
 		panelId = (panelId < 0) ? 0 : panelId;
 		panelId = (panelId > this.panels.length - 1) ? this.panels.length - 1 : panelId;
@@ -117,23 +144,68 @@ var mooslides = new Class({
 		this.activePanelId = panelId;
 	},
 	
+	/**
+	Slides to the next panel
+	@example
+	myslides.slideNext();
+	*/
 	slideNext: function() {
 		nextPanel =	(this.activePanelId == this.panels.length -1) ? this.activePanelId : this.activePanelId  + 1;
 		this.slideTo(nextPanel);
 
 	},
+	/**
+	Slides to the preview panel
+	@example
+	myslides.slidePrevious();
+	*/
 	slidePrevious: function() {
 		prevPanel =	(this.activePanelId == 0) ? this.activePanelId : this.activePanelId  - 1;
 		this.slideTo(prevPanel);
 	},
+	
+	/**
+	Slides to the first panel
+	@example
+	myslides.slideFirst();
+	*/
+	slideFirst: function() {
+		this.slideTo(0);
+	},
+	
+	/**
+	Slides to the last panel
+	@example
+	myslides.slideLast();
+	*/
+	slideLast: function() {
+		this.slideTo(this.panels.length - 1);
+	},
+	
+	/**
+	Starts the animation. Panels will change at the interval specified
+	in options. When it reaches the last panel, it will quickly go back
+	to the first panel.
+	@example
+	myslides.loopStart();
+	*/
 	loopStart:function () {
 		this.timer = this.loopNext.periodical(4000, this);
 	},
 	
+	/**
+	Stops the animation
+	@example
+	myslides.loopStop();
+	*/
 	loopStop: function() {
 		$clear(this.timer);
 	},
 	
+	/**
+	Do the actual loop. *INTERNAL USE*
+	@private
+	*/
 	loopNext: function() {
 		if(this.activePanelId == this.panels.length -1) {
 			var myFx = new Fx.Scroll(this.outterdiv, {duration: 200, transition: Fx.Transitions.Expo.easeOut}).start(0, 0);
@@ -144,6 +216,11 @@ var mooslides = new Class({
 		}
 	},
 	
+	/**
+	Similar to slideTo but does it without an animation. This means you will move
+	instantly to the specified panelId
+	@param {Int} panelId The id of the panel to warp to. Zero-based.
+	*/
 	warpTo: function(panelId) {
 		panelId = (panelId < 0) ? 0 : panelId;
 		panelId = (panelId > this.panels.length - 1) ? this.panels.length - 1 : panelId;
