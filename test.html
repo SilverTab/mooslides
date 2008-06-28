@@ -9,6 +9,7 @@
 		<script type="text/javascript">
 			window.addEvent('domready', function() {
 				myslides = new mooslides('main', {});
+				
 			});
 		</script>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -17,18 +18,40 @@
 			div.panels {
 				height: 250px;
 				width: 450px;
-				padding: 10px;
 				color: #ddd;
 				background-color: #262626;
-				border: 1px solid #000;
+				border: none;
+			}
+			div#panel1 {
+				background: url(images/panel1.jpg) no-repeat top left;
+			}
+			
+			div#panel2 {
+				background: url(images/panel2.jpg) no-repeat top left;
+			}
+			
+			div#panel3 {
+				background: url(images/panel3.jpg) no-repeat top left;
+			}
+			
+			li.toolbar-button {
+				display: inline;
+				background-color: #262626;
+				padding: 2px 5px;
+				color: #ddd;
+				cursor: pointer;
+			}
+			li.active {
+				background-color: #666;
 			}
 		</style>
 	</head>
 	<body>
+		<h1>Mooslides Example 1</h1>
 		<div id="main">
-			<div id="panel1" class="panels">Panel 1</div>
-			<div id="panel2" class="panels">Panel 2</div>
-			<div id="panel3" class="panels">Panel 3</div>
+			<div id="panel1" class="panels"></div>
+			<div id="panel2" class="panels"></div>
+			<div id="panel3" class="panels"></div>
 		</div>
 
 		<input type="button" value="Play" onclick="myslides.loopStart();"> <input type="button" value="Pause" onclick="myslides.loopStop();">
