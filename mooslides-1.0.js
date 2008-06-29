@@ -76,15 +76,12 @@ var mooslides = new Class({
 			id: 'innerdiv'
 		});
 		
-		$extend(this.toolbarStyles, this.options.toolbarStyles);
 		this.panels = this.outterdiv.getChildren().filter(".panels");
 		if(this.options.customToolbar == false) {
 			this.toolbar = this.buildToolbar();
 			this.toolbar.inject(this.outterdiv, 'before');
 		}
-		else {
-			this.toolbar = this.options.customToolbar;
-		}
+
 		
 		this.panels.setStyles({
 			float: 'left'
@@ -96,10 +93,17 @@ var mooslides = new Class({
 		this.panels.dispose();
 		this.panels.inject(this.innerdiv);
 		this.innerdiv.inject(this.outterdiv);
-		
 		this.outterdiv.setStyle('overflow', 'hidden');
-		this.activePanelId = 0;
 		
+		// set the panel's alt to it's id...
+		var cnt = 0;
+		this.panels.each(function(aPanel) {
+			aPanel.set('alt', cnt + "");
+			cnt = cnt + 1;
+			aPanel.addEvent('click', this.panelClicked.bind(this));
+		}.bind(this));
+		
+		this.activePanelId = 0;
 		this.slideTo(0);
 
 		if(this.options.autoStart) {
@@ -107,6 +111,11 @@ var mooslides = new Class({
 		}
 		
 	},
+	
+	panelClicked: function() {
+		this.outterdiv.fireEvent('panelClick', this.activePanelId);
+	},
+	
 	/**
 	Builds the toolbar if the user wants to use the default toolbar. *INTERNAL USE*.
 	@private
@@ -143,6 +152,8 @@ var mooslides = new Class({
 				this.slideTo(aButton.get('title') - 1);
 			}.bind(this, this.buttons[cnt-1]));
 			this.buttons[cnt-1].inject(newToolbarUl);
+			
+			
 			cnt = cnt + 1;
 		
 		}.bind(this));
