@@ -35,7 +35,7 @@
 	contains a basic style that should get you started.
 	
 	@example 
-	// Creating a new mooslides with those styles.
+	// Creating a new mooslides.
 	var myslides = new mooslides('mydiv', {
 		customToolbar: false,
 		toolbarStyles: myStyles
@@ -112,6 +112,13 @@ var mooslides = new Class({
 		
 	},
 	
+	/**
+	panelClick event. This is mostly for internal use. Note that it fires a "panelClick" event
+	on the main div each time a panel is clicked. It will send the panel id of the clicked
+	panel to your callback function.
+	@event
+	@returns {Int} The id of the newly selected panel.
+	*/
 	panelClicked: function() {
 		this.outterdiv.fireEvent('panelClick', this.activePanelId);
 	},
