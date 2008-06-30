@@ -188,9 +188,12 @@ var mooslides = new Class({
 	slideTo: function(panelId) {
 		panelId = (panelId < 0) ? 0 : panelId;
 		panelId = (panelId > this.panels.length - 1) ? this.panels.length - 1 : panelId;
-		var toX = (panelId ) * this.size.x;
-		var myFx = new Fx.Scroll(this.outterdiv, {duration: this.options.animationDuration, transition: this.options.transitionEffect}).start(toX, 0);
-		this.changed(panelId);
+		if(this.activePanelId != panelId)
+		{
+			var toX = (panelId ) * this.size.x;
+			var myFx = new Fx.Scroll(this.outterdiv, {duration: this.options.animationDuration, transition: this.options.transitionEffect}).start(toX, 0);
+			this.changed(panelId);
+		}
 	},
 	
 	/**
@@ -274,9 +277,12 @@ var mooslides = new Class({
 	warpTo: function(panelId) {
 		panelId = (panelId < 0) ? 0 : panelId;
 		panelId = (panelId > this.panels.length - 1) ? this.panels.length - 1 : panelId;
-		var toX = (panelId ) * this.size.x;
-		var myFx = new Fx.Scroll(this.outterdiv).set(toX, 0);
-		this.changed(panelId);
+		if(this.activePanelId != panelId)
+		{
+			var toX = (panelId ) * this.size.x;
+			var myFx = new Fx.Scroll(this.outterdiv).set(toX, 0);
+			this.changed(panelId);
+		}
 	},
 	
 	/**
@@ -293,6 +299,7 @@ var mooslides = new Class({
 			this.buttons[this.activePanelId].removeClass('active');
 			this.buttons[newPanel].addClass('active');
 		}
+		
 		this.activePanelId = newPanel;
 		this.outterdiv.fireEvent('changed', newPanel);
 	}
